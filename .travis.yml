@@ -1,0 +1,33 @@
+dist: xenial
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.7-dev"
+  - "3.8-dev"
+  - "nightly"
+  - "pypy3"
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - python: "3.7-dev"
+    - python: "3.8-dev"
+    - python: "nightly"
+    - python: "pypy3"
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - python setup.py test
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -t coverage.py

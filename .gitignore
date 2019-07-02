@@ -1,0 +1,9 @@
+__pycache__
+build
+dist
+.python-version
+.eggs
+.idea
+*.egg-info
+.coverage
+
