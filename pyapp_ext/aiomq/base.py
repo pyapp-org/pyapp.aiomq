@@ -24,9 +24,9 @@ class BaseQueue(abc.ABC):
         """
 
 
-class TaskQueue(BaseQueue, metaclass=abc.ABCMeta):
+class MessageQueue(BaseQueue, metaclass=abc.ABCMeta):
     """
-    Task style queue.
+    Message Queue messaging pattern.
 
     Messages are delivered to the first listener to query for the next message
     eg::
@@ -59,7 +59,7 @@ class TaskQueue(BaseQueue, metaclass=abc.ABCMeta):
 
 class PubSubQueue(BaseQueue, metaclass=abc.ABCMeta):
     """
-    Pub/Sub style queue.
+    Publish-Subscribe messaging pattern.
 
     Messages are broadcast to all subscribed listeners eg::
 

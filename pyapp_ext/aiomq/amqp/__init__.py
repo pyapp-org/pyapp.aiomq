@@ -8,7 +8,7 @@ from ..import base
 logger = logging.getLogger(__name__)
 
 
-class TaskQueue(base.TaskQueue):
+class MessageQueue(base.MessageQueue):
     """
     Pika based task queue
     """
@@ -34,3 +34,7 @@ class TaskQueue(base.TaskQueue):
 
     async def listen(self):
         pass
+
+
+class PubSubPubSubQueue(base.PubSubPubSubQueue):
+    pass

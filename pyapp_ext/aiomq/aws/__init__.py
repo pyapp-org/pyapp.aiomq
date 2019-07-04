@@ -9,9 +9,9 @@ from ..import base
 logger = logging.getLogger(__name__)
 
 
-class SQS(base.TaskQueue):
+class MessageQueue(base.MessageQueue):
     """
-    SQS based task queue
+    Message Queue using SQS
     """
 
     def __init__(self, *, name: str, aws_credentials: str = None):
@@ -48,9 +48,9 @@ class SQS(base.TaskQueue):
         pass
 
 
-class SNS(base.PubSubQueue):
+class PubSubQueue(base.PubSubQueue):
     """
-    SNS based pub/sub queue.
+    Publish-Subscribe Queue using SNS
     """
     async def publish(self, message: str, topic: str):
         pass
