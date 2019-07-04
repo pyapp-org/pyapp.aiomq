@@ -5,7 +5,26 @@ from typing import Sequence, Callable, Awaitable
 from pyapp.events import AsyncEvent
 
 
-class TaskQueue(abc.ABC):
+class BaseQueue(abc.ABC):
+    async def __aenter__(self) -> "BaseQueue":
+        await self.open()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+
+    async def open(self):
+        """
+        Open queue
+        """
+
+    async def close(self):
+        """
+        Close Queue
+        """
+
+
+class TaskQueue(BaseQueue, metaclass=abc.ABCMeta):
     """
     Task style queue.
 
@@ -38,7 +57,7 @@ class TaskQueue(abc.ABC):
         """
 
 
-class PubSubQueue(abc.ABC):
+class PubSubQueue(BaseQueue, metaclass=abc.ABCMeta):
     """
     Pub/Sub style queue.
 

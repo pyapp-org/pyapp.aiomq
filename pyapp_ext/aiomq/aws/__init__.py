@@ -1,28 +1,42 @@
 import logging
+import botocore.exceptions
 
 from typing import Sequence
 from pyapp_ext.aiobotocore import create_client
 
-from ..base import TaskQueue, PubSubQueue
+from ..import base
 
 logger = logging.getLogger(__name__)
 
 
-class SQS(TaskQueue):
+class SQS(base.TaskQueue):
     """
     SQS based task queue
     """
 
-    def __init__(self, *, url: str, aws_credentials: str = None):
-        self.url = url
+    def __init__(self, *, name: str, aws_credentials: str = None):
+        self.name = name
+        self.client = create_client("SQS", credentials=aws_credentials)
 
-        self.client = create_client("SQS", aws_credentials)
+        self._queue_url = None
+
+    async def _get_queue_url(self):
+        if self._queue_url:
+            try:
+                response = await self.client.get_queue_url(QueueName=self.name)
+            except botocore.exceptions.ClientError as ex:
+                if ex.response['Error']['Code'] == "AWS.SimpleQueueService.NonExistentQueue":
+                    raise QueueNotFound
+                else:
+                    raise
+            self._queue_url = response["QueueUrl"]
+        return self._queue_url
 
     async def create(self, name):
         pass
 
     async def send(self, message: str):
-        self.client.sendMessage(
+        self.client.send_message(
             URL=self.url,
             MessageBody=message
         )
@@ -34,7 +48,7 @@ class SQS(TaskQueue):
         pass
 
 
-class SNS(PubSubQueue):
+class SNS(base.PubSubQueue):
     """
     SNS based pub/sub queue.
     """
