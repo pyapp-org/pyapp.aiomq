@@ -1,5 +1,5 @@
 from pyapp.app import CliApplication, CommandOptions
-from pyapp.injection import inject_into, FactoryArgs
+from pyapp.injection import inject_into, Args
 
 import sample
 
@@ -12,7 +12,7 @@ def send(opts: CommandOptions):
     from pyapp_ext.aiomq import TaskQueue
 
     @inject_into
-    def send_message(*, queue: TaskQueue = FactoryArgs(name="jobs")):
+    def send_message(*, queue: TaskQueue = Args(name="jobs")):
         queue.send("Hi!")
 
     send_message()
